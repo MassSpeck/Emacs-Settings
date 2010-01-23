@@ -52,19 +52,46 @@
 ;; Fonts
 (setq default-frame-alist
       '(
-        (font . "-apple-courier-medium-r-normal--14-0-72-72-m-0-iso10646-1")
+        (font . "-apple-courier-medium-r-normal--13-0-72-72-m-0-iso10646-1")
         (width . 95) (height . 46)
         ))
 
+;; number face
+(defvar font-lock-number-face 'font-lock-number-face
+  "Don't even think of using this.")
+
+(defface font-lock-number-face '()
+  "Font Lock mode face used for numbers."
+  :group 'font-lock-faces)
+
+(defun c-mode-number-face ()
+  (font-lock-add-keywords
+   nil
+   ;; for java, numbers ending in [dD] are also acceptable (add if I have to code java)
+   '(("\\b\\(0[xX][0-9a-fA-F]+[lL]?\\|[0-9]+\\.?[0-9]*\\([eE][-+]?[0-9]+\\)?\\([lL]\\|[fF]\\|ll\\|lf\\|[uU][lL]\\|[uU]\\)?\\)\\b"
+      1 font-lock-number-face))))
+
+(add-hook 'c-mode-common-hook 'c-mode-number-face)
 
 ;;; Key Bindings
 
 (global-set-key (kbd "C--") 'recompile)
-(global-set-key [F7] 'compile)
+(global-set-key [f7] 'compile)
 (global-set-key [(control z)] 'undo)
 (global-set-key [(control x) (control k)] 'kill-region)
 (global-set-key [(control m)] 'newline-and-indent)
 (global-set-key [(meta g)] 'goto-line)
+
+;; Use vi style line opening.
+(global-set-key [(control o)] 'vi-open-next-line)
+
+(defun vi-open-next-line (arg)
+  "Move to the next line (like vi) and then opens a line."
+  (interactive "p")
+  (end-of-line)
+  (open-line arg)
+  (next-line 1)
+  (indent-according-to-mode))
 
 ;; Fancy word deletion
 (global-set-key [(control w)] 'kill-syntax-backward)
@@ -131,4 +158,4 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+ '(font-lock-number-face ((t (:foreground "blue"))) t))
