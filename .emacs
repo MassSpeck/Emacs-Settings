@@ -26,6 +26,10 @@
 (scroll-bar-mode -1)
 ;(blink-cursor-mode -1)
 (unless window-system (menu-bar-mode -1))
+(when window-system
+  (load-library "sourcepair")
+  (define-key global-map (kbd "C-=") 'sourcepair-load))
+
 
 ;; When a region is selected, typing anything replaces the region.
 (delete-selection-mode t)
